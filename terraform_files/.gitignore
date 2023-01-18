@@ -1,0 +1,10 @@
+
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+module_lesson
+Elior-keypair.pem
+docker-compose.yml
+docker_image
+production
