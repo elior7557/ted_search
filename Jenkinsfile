@@ -44,8 +44,8 @@ pipeline {
                 sh """
                 cd terraform_files/
                 mkdir production
-                docker save -o ./production/ tedsearch
-                
+                docker save -o ./production/docker_image tedsearch
+                cp -r ../app/docker-compose.yml ../app/static/ ./production/
                    """
 
              }
