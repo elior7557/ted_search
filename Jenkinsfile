@@ -55,11 +55,13 @@ pipeline {
 
         stage("destory test enviroment"){
             when { expression { return provision_test }  }
+            steps{
             sh """
                 sh "new env is running"
                 sleep 20
                 terraform destroy -auto-approve
                """
+            }
         }
 
     }
