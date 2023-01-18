@@ -1,5 +1,7 @@
-pipeline {
 
+def provision_test
+
+pipeline {
     agent any
     tools {
         jdk 'java-8'
@@ -16,6 +18,14 @@ pipeline {
             steps {
                 deleteDir()
                 checkout scm
+                script {
+                    if (lastCommitIsTest()) {
+                        echo '#test detected'
+                        provision_test = true
+                    } else {
+                        provision_test = false
+                    }
+                }
             }
         }
 
@@ -26,6 +36,11 @@ pipeline {
                 mvn verify
                    '''
             }
+        }
+
+        stage('provision test enviroment') {
+             when { expression { return provision_test }  }
+
         }
     }
     post {
@@ -40,5 +55,14 @@ pipeline {
         aborted {
             updateGitlabCommitStatus name: 'build', state: 'canceled'
         }
+    }
+}
+
+def lastCommitIsTest() {
+    lastCommit = sh([script: 'git log -1', returnStdout: true])
+    if (lastCommit.contains('#test')) {
+        return true
+    } else {
+        return false
     }
 }
