@@ -45,12 +45,23 @@ pipeline {
                 cd terraform_files/
                 mkdir production
                 docker save -o ./production/docker_image tedsearch
-                cp -r ../app/docker-compose.yml ../app/static/ ./production/
+                cp -r ../app/docker-compose.yml ../app/static/ ../app/nginx/ ./production/
+                terraform init
+                terraform apply -auto-approve
                    """
 
              }
-
         }
+
+        stage("destory test enviroment"){
+            when { expression { return provision_test }  }
+            sh """
+                sh "new env is running"
+                sleep 20
+                terraform destroy -auto-approve
+               """
+        }
+
     }
     post {
         failure {
