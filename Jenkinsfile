@@ -58,7 +58,7 @@ pipeline {
             when { expression { return provision_test }  }
             steps{
             sh """
-                echp "new env is running"
+                echo "new env is running"
                 sleep 20
                 terraform destroy -auto-approve
                """
