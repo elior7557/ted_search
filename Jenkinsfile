@@ -40,6 +40,9 @@ pipeline {
 
         stage('provision test enviroment') {
              when { expression { return provision_test }  }
+             steps{
+                sh "echo provision_test env"
+             }
 
         }
     }
