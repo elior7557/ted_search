@@ -40,7 +40,7 @@ resource "null_resource" "name" {
 
 
   provisioner "local-exec" {
-    command = "echo ${self.public_ip} >> ip.txt"
+    command = "echo ${aws_instance.myinstance.public_ip} >> ip.txt"
   }
 
 
