@@ -42,9 +42,11 @@ pipeline {
              when { expression { return provision_test }  }
              steps{
                 sh """
+                cd terraform_files/
+
                 terraform init
                 terraform destroy -auto-approve || echo "no enviroment was running"
-                cd terraform_files/
+                
                 mkdir production
                 docker save -o ./production/docker_image tedsearch
                 cp -r ../app/docker-compose.yml ../app/static/ ../app/nginx/ ./production/
