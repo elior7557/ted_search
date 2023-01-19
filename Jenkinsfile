@@ -83,6 +83,7 @@ pipeline {
 
                 echo "new env is running"
                 sleep 20
+                cd terraform_files/
                 terraform destroy -auto-approve
                """
             }
