@@ -17,6 +17,14 @@ resource "aws_instance" "myinstance" {
     destination = "/tmp"
   }
 
+
+  provisioner "local-exec" {
+    command = "echo ${self.private_ip} >> private_ips.txt"
+  }
+
+
+
+
   #activate the script
   provisioner "remote-exec" {
     inline = [
@@ -24,18 +32,6 @@ resource "aws_instance" "myinstance" {
       "sudo /tmp/script.sh",
     ]
   }
-
-  provisioner "local-exec" {
-    command = "echo ${self.public_ip} >> ip.txt"
-  }
-
-  provisioner "local-exec" {
-    command = "echo ${self.public_ip} >> ip1.txt"
-  }
-    provisioner "local-exec" {
-    command = "echo ${self.private_ip} >> private_ips.txt"
-  }
-
 
 
   connection {
