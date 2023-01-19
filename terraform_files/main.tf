@@ -19,7 +19,7 @@ resource "aws_instance" "myinstance" {
 
 
   provisioner "local-exec" {
-    command = "echo ${self.private_ip} >> private_ips.txt"
+    command = "echo ${self.public_ip} >> ip.txt"
   }
 
 

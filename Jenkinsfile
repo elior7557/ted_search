@@ -46,7 +46,7 @@ pipeline {
 
                 terraform init
                 terraform destroy -auto-approve || echo "no enviroment was running"
-                
+
                 mkdir production
                 docker save -o ./production/docker_image tedsearch
                 cp -r ../app/docker-compose.yml ../app/static/ ../app/nginx/ ./production/
@@ -63,11 +63,12 @@ pipeline {
                 script{
                 
                 sh "echo 'Starting E2E now'"
-                // def IP = sh (
-                //     script: 'cat terraform_files/ip.txt',
-                //     returnStdout: true
-                // ).trim()
-                // sh "bash app/e2e.sh ${IP}"
+                def IP = sh (
+                    script: 'cat terraform_files/ip.txt',
+                    returnStdout: true
+                ).trim()
+                sh "sleep 10"
+                sh "bash app/e2e.sh ${IP}"
 
                 }
 
@@ -79,6 +80,7 @@ pipeline {
             when { expression { return provision_test }  }
             steps{
             sh """
+
                 echo "new env is running"
                 sleep 20
                 terraform destroy -auto-approve
