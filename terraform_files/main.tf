@@ -41,30 +41,30 @@ resource "null_resource" "name" {
     ]
   }
 
-  # # script
-  # provisioner "file" {
-  #   source      = "deployment.sh"
-  #   destination = "/tmp/script.sh"
-  # }
-  # # deployment folder
-  # provisioner "file" {
-  #   source      = "./production"
-  #   destination = "/tmp"
-  # }
+  # script
+  provisioner "file" {
+    source      = "deployment.sh"
+    destination = "/tmp/script.sh"
+  }
+  # deployment folder
+  provisioner "file" {
+    source      = "./production"
+    destination = "/tmp"
+  }
 
 
   provisioner "local-exec" {
-    command = "echo ${aws_instance.myinstance.public_ip} >> ip.txt"
+    command = "echo ${module.compute.ec2_public_ip} >> ip.txt"
   }
 
 
   # #activate the script
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "chmod +x /tmp/script.sh",
-  #     "sudo /tmp/script.sh",
-  #   ]
-  # }
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/script.sh",
+      "sudo /tmp/script.sh",
+    ]
+  }
 
 
 }
