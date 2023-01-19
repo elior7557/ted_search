@@ -84,21 +84,6 @@ pipeline {
             }
 
         }
-
-        // stage("destory test enviroment"){
-        //     when { expression { return provision_test }  }
-        //     steps{
-        //     sh """
-
-        //         echo "new env is running"
-        //         sleep 20
-        //         cd terraform_files/
-        //         terraform destroy -auto-approve
-        //        """
-        //     }
-        // }
-
-
     }
     post {
         failure {
