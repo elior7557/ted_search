@@ -57,8 +57,17 @@ pipeline {
         stage('E2E test'){
             when { expression { return provision_test }  }
             steps{
+                script{
+                
                 sh "echo 'Starting E2E now'"
-                sh "bash app/e2e.sh \$(cat terraform_files/ip.txt)"
+                def IP = sh (
+                    script: 'cat terraform_files/ip.txt'
+                    returnStdout: true
+                ).trim()
+                sh "bash app/e2e.sh ${IP}"
+
+                }
+
             }
 
         }
