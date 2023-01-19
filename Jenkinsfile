@@ -61,7 +61,7 @@ pipeline {
                 
                 sh "echo 'Starting E2E now'"
                 def IP = sh (
-                    script: 'cat terraform_files/ip.txt'
+                    script: 'cat terraform_files/ip.txt',
                     returnStdout: true
                 ).trim()
                 sh "bash app/e2e.sh ${IP}"
