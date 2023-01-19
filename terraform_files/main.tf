@@ -1,42 +1,56 @@
-resource "aws_instance" "myinstance" {
-  ami                         = var.ec2_ami
-  instance_type               = var.ec2_type
-  vpc_security_group_ids      = [aws_security_group.httpSSH.id]
-  subnet_id                   = "subnet-0f2f68a6e4ba9e705"
-  associate_public_ip_address = var.associate_public_ip_address
-  key_name                    = aws_key_pair.aws_key_pair.key_name  
 
-  tags = merge(local.common_tags, {
-    Name = "TedSearch-${terraform.workspace}"
-  })
+
+module "network" {
+  source      = "./modules/network"
+  vpc_name    = "TedSearch-${terraform.workspace}"
+  subnet_name = "TedSearch_Public_Subnet-${terraform.workspace}"
+  tags        = local.common_tags
 }
+
+
+module "compute" {
+  source    = "./modules/compute"
+  region    = var.aws_region
+  subnet_id = module.network.subnet_id
+  ec2_name  = "TedSearch-${terraform.workspace}"
+  sg_name   = "sgTedSearch-${terraform.workspace}"
+  vpc_id    = module.network.vpc_id
+  tags      = local.common_tags
+}
+
 
 
 
 resource "null_resource" "name" {
   triggers = {
-    instance_id = aws_instance.myinstance.id
+    instance_id = module.compute.ec2_id
   }
 
-  depends_on = [aws_instance.myinstance]
+  depends_on = [module.compute]
 
   connection {
     type        = "ssh"
     user        = "ubuntu"
-    host        = aws_instance.myinstance.public_ip
-    private_key = tls_private_key.rsa-key.private_key_pem
+    host        = module.compute.ec2_public_ip
+    private_key = module.compute.key
   }
 
-  # script
-  provisioner "file" {
-    source      = "deployment.sh"
-    destination = "/tmp/script.sh"
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'hello from the other side'",
+    ]
   }
-  # deployment folder
-  provisioner "file" {
-    source      = "./production"
-    destination = "/tmp"
-  }
+
+  # # script
+  # provisioner "file" {
+  #   source      = "deployment.sh"
+  #   destination = "/tmp/script.sh"
+  # }
+  # # deployment folder
+  # provisioner "file" {
+  #   source      = "./production"
+  #   destination = "/tmp"
+  # }
 
 
   provisioner "local-exec" {
@@ -44,64 +58,13 @@ resource "null_resource" "name" {
   }
 
 
-  #activate the script
-  provisioner "remote-exec" {
-    inline = [
-      "chmod +x /tmp/script.sh",
-      "sudo /tmp/script.sh",
-    ]
-  }
+  # #activate the script
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "chmod +x /tmp/script.sh",
+  #     "sudo /tmp/script.sh",
+  #   ]
+  # }
+
 
 }
-
-
-# Create a private and public key
-resource "tls_private_key" "rsa-key" {
-  algorithm = "RSA"
-}
-
-resource "aws_key_pair" "aws_key_pair" {
-  key_name   = "terraform-key-elior"
-  public_key = tls_private_key.rsa-key.public_key_openssh
-}
-
-
-
-
-
-
-
-output "public_ip" {
-  value = aws_instance.myinstance.*.public_ip
-}
-
-// Seurity Groups
-resource "aws_security_group" "httpSSH" {
-  name        = "ted-search_sg"
-  description = "ssh,http"
-  vpc_id      = "vpc-009ab8fc713ac0617"
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = local.common_tags
-}
-

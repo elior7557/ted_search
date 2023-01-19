@@ -45,15 +45,16 @@ pipeline {
                 cd terraform_files/
 
                 terraform init
-                terraform destroy -auto-approve || echo "no enviroment was running"
+               # terraform destroy -auto-approve || echo "no enviroment was running"
+
+                terraform workspace new test || terraform workspace select test
 
                 mkdir production
                 docker save -o ./production/docker_image tedsearch
                 cp -r ../app/docker-compose.yml ../app/static/ ../app/nginx/ ./production/
 
-                terraform apply -auto-approve
+                terraform apply -var aws_region=eu-central-1 -auto-approve
                    """
-
              }
         }
 
@@ -71,23 +72,32 @@ pipeline {
                 sh "bash app/e2e.sh ${IP}"
 
                 }
-
+            }
+            post{
+                always{
+                    sh """
+                        cd terraform_files/
+                        terraform workspace select test
+                        terraform destroy -var aws_region=eu-central-1 -auto-approve
+                       """
+                }
             }
 
         }
 
-        stage("destory test enviroment"){
-            when { expression { return provision_test }  }
-            steps{
-            sh """
+        // stage("destory test enviroment"){
+        //     when { expression { return provision_test }  }
+        //     steps{
+        //     sh """
 
-                echo "new env is running"
-                sleep 20
-                cd terraform_files/
-                terraform destroy -auto-approve
-               """
-            }
-        }
+        //         echo "new env is running"
+        //         sleep 20
+        //         cd terraform_files/
+        //         terraform destroy -auto-approve
+        //        """
+        //     }
+        // }
+
 
     }
     post {

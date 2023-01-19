@@ -1,31 +1,37 @@
-// Instances vars
-variable "ec2_ami" {
-  type    = string
-  default = "ami-03c476a1ca8e3ebdc" #eu-west-3 ubuntu Paris
-}
-
-variable "ec2_type" {
-  type    = string
-  default = "t3a.micro"
-}
-
-
-variable "associate_public_ip_address" {
-  type    = bool
-  default = true
-}
-
-variable "key_pair_name" {
-  type    = string
-  default = "Elior-keypair"
-}
-
+# Region
 
 variable "aws_region" {
   description = "AWS region"
   type        = string
-  default     = "eu-west-3"
+  default     = "eu-central-1" # Frankfurt
 }
+
+
+# Network Vars
+
+
+// Instances vars
+# variable "ec2_ami" {
+#   type    = string
+#   default = "ami-03c476a1ca8e3ebdc" #eu-west-3 ubuntu Paris
+# }
+
+# variable "ec2_type" {
+#   type    = string
+#   default = "t3a.micro"
+# }
+
+
+# variable "associate_public_ip_address" {
+#   type    = bool
+#   default = true
+# }
+
+# variable "key_pair_name" {
+#   type    = string
+#   default = "Elior-keypair"
+# }
+
 
 
 // Common Tags
