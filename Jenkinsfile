@@ -1,5 +1,6 @@
 
 def provision_test
+def workspace 
 
 pipeline {
     agent any
@@ -41,7 +42,9 @@ pipeline {
         stage('provision test enviroment') {
              when { expression { return provision_test }  }
              steps{
-                def workspace = "Test_${env.BRANCH_NAME}"
+                script{
+                workspace = "Test_${env.BRANCH_NAME}"
+                }
                 sh """
                 cd terraform_files/
 
