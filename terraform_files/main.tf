@@ -4,7 +4,28 @@ resource "aws_instance" "myinstance" {
   vpc_security_group_ids      = [aws_security_group.httpSSH.id]
   subnet_id                   = "subnet-0f2f68a6e4ba9e705"
   associate_public_ip_address = var.associate_public_ip_address
-  key_name                    = aws_key_pair.aws_key_pair.key_name
+  key_name                    = aws_key_pair.aws_key_pair.key_name  
+
+  tags = merge(local.common_tags, {
+    Name = "TedSearch-${terraform.workspace}"
+  })
+}
+
+
+
+resource "null_resource" "name" {
+  triggers = {
+    instance_id = aws_instance.myinstance.id
+  }
+
+  depends_on = [aws_instance.myinstance]
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    host        = aws_instance.myinstance.public_ip
+    private_key = tls_private_key.rsa-key.private_key_pem
+  }
 
   # script
   provisioner "file" {
@@ -23,8 +44,6 @@ resource "aws_instance" "myinstance" {
   }
 
 
-
-
   #activate the script
   provisioner "remote-exec" {
     inline = [
@@ -33,19 +52,7 @@ resource "aws_instance" "myinstance" {
     ]
   }
 
-
-  connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    host        = self.public_ip
-    private_key = tls_private_key.rsa-key.private_key_pem
-  }
-
-  tags = merge(local.common_tags, {
-    Name = "TedSearch-${terraform.workspace}"
-  })
 }
-
 
 
 # Create a private and public key
