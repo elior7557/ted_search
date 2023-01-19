@@ -15,6 +15,7 @@ module "compute" {
   ec2_name  = "TedSearch-${terraform.workspace}"
   sg_name   = "sgTedSearch-${terraform.workspace}"
   vpc_id    = module.network.vpc_id
+  key_name  = "TedSearch-${terraform.workspace}_Key"
   tags      = local.common_tags
 }
 

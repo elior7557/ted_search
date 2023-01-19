@@ -27,6 +27,9 @@ variable "ec2_name" {
 }
 
 
+variable "key_name" {
+  type = string
+}
 
 ### Optinal ###
 variable "http_port" {
