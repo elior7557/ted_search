@@ -41,13 +41,14 @@ pipeline {
         stage('provision test enviroment') {
              when { expression { return provision_test }  }
              steps{
+                def workspace = "Test_${env.BRANCH_NAME}"
                 sh """
                 cd terraform_files/
 
                 terraform init
                # terraform destroy -auto-approve || echo "no enviroment was running"
 
-                terraform workspace new test || terraform workspace select test
+                terraform workspace new ${workspace} || terraform workspace select ${workspace}
 
                 mkdir production
                 docker save -o ./production/docker_image tedsearch
@@ -77,7 +78,7 @@ pipeline {
                 always{
                     sh """
                         cd terraform_files/
-                        terraform workspace select test
+                        terraform workspace select ${workspace}
                         terraform destroy -var aws_region=eu-central-1 -auto-approve
                        """
                 }
