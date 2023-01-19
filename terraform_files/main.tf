@@ -29,6 +29,10 @@ resource "aws_instance" "myinstance" {
     command = "echo ${self.public_ip} >> ip.txt"
   }
 
+  provisioner "local-exec" {
+    command = "echo ${self.public_ip} >> ip1.txt"
+  }
+
 
   connection {
     type        = "ssh"
