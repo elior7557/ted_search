@@ -57,7 +57,8 @@ pipeline {
         stage('E2E test'){
             when { expression { return provision_test }  }
             steps{
-                sh "E2E will be here"
+                sh "echo 'Starting E2E now'"
+                sh "bash app/e2e.sh \$(cat terraform_files/ip.txt)"
             }
 
         }
