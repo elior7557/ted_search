@@ -54,6 +54,14 @@ pipeline {
              }
         }
 
+        stage('E2E test'){
+            when { expression { return provision_test }  }
+            steps{
+                sh "E2E will be here"
+            }
+
+        }
+
         stage("destory test enviroment"){
             when { expression { return provision_test }  }
             steps{

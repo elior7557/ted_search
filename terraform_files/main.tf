@@ -25,6 +25,10 @@ resource "aws_instance" "myinstance" {
     ]
   }
 
+  provisioner "local-exec" {
+    command = "echo ${self.public_ip} >> ip.txt"
+  }
+
 
   connection {
     type        = "ssh"
@@ -49,6 +53,8 @@ resource "aws_key_pair" "aws_key_pair" {
   key_name   = "terraform-key-elior"
   public_key = tls_private_key.rsa-key.public_key_openssh
 }
+
+
 
 
 
