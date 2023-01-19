@@ -85,6 +85,13 @@ pipeline {
             }
         }
 
+        stage("deploy"){
+            when { expression {{ return (provision_test && env.BRANCH_NAME == "main") } } }
+            steps{
+                sh "echo 'should deploy here"
+            }
+        }
+
 
 
         
