@@ -92,6 +92,7 @@ pipeline {
             when { expression { return (provision_test && env.BRANCH_NAME == "main") } }
             steps{
                 sh """
+                cd terraform_files/
                 terraform workspace new prod || terraform workspace select prod
                 terraform apply -var aws_region=eu-west-3 -replace=module.compute.aws_instance.myinstance -auto-approve
                   """
