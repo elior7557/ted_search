@@ -93,7 +93,7 @@ pipeline {
             steps{
                 sh """
                 terraform workspace new prod || terraform workspace select prod
-                terraform apply -var aws_region=eu-west-3 -replace=module.compute.aws_instance.myinstance-auto-approve
+                terraform apply -var aws_region=eu-west-3 -replace=module.compute.aws_instance.myinstance -auto-approve
                   """
             }
         }
