@@ -21,6 +21,11 @@ resource "aws_instance" "myinstance" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.aws_key_pair.key_name
 
+  lifecycle {
+    create_before_destroy = var.create_before_destroy
+  }
+
+
   tags = merge(var.tags, {
     Name = var.ec2_name
   })

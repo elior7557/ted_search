@@ -1,6 +1,14 @@
 # Variable of the compute module
 
 
+### Optinal ###
+variable "create_before_destroy" {
+  type    = bool
+  default = false
+}
+
+
+
 ### Required  ###
 variable "tags" {
   type = map(any)
