@@ -9,14 +9,16 @@ module "network" {
 
 
 module "compute" {
-  source    = "./modules/compute"
-  region    = var.aws_region
-  subnet_id = module.network.subnet_id
-  ec2_name  = "TedSearch-${terraform.workspace}"
-  sg_name   = "sgTedSearch-${terraform.workspace}"
-  vpc_id    = module.network.vpc_id
-  key_name  = "TedSearch-${terraform.workspace}_Key"
-  tags      = local.common_tags
+  source                = "./modules/compute"
+  region                = var.aws_region
+  subnet_id             = module.network.subnet_id
+  ec2_name              = "TedSearch-${terraform.workspace}"
+  sg_name               = "sgTedSearch-${terraform.workspace}"
+  vpc_id                = module.network.vpc_id
+  key_name              = "TedSearch-${terraform.workspace}_Key"
+  create_before_destroy = var.create_before_destroy
+  tags                  = local.common_tags
+
 }
 
 

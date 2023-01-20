@@ -22,7 +22,7 @@ resource "aws_instance" "myinstance" {
   key_name                    = aws_key_pair.aws_key_pair.key_name
 
   lifecycle {
-    create_before_destroy = var.create_before_destroy
+    create_before_destroy = true
   }
 
 

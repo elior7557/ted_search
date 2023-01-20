@@ -94,7 +94,7 @@ pipeline {
                 sh "echo 'should deploy here"
                 sh """
                 terraform workspace new prod || terraform workspace select prod
-                terraform apply -var aws_region=eu-west-3 create_before_destroy=true -auto-approve
+                terraform apply -var aws_region=eu-west-3 -replace=module.compute.aws_instance.myinstance-auto-approve
                   """
             }
         }
