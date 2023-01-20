@@ -91,7 +91,6 @@ pipeline {
         stage("deploy"){
             when { expression { return (provision_test && env.BRANCH_NAME == "main") } }
             steps{
-                sh "echo 'should deploy here"
                 sh """
                 terraform workspace new prod || terraform workspace select prod
                 terraform apply -var aws_region=eu-west-3 -replace=module.compute.aws_instance.myinstance-auto-approve
