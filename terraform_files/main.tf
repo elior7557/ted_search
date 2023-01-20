@@ -16,7 +16,6 @@ module "compute" {
   sg_name               = "sgTedSearch-${terraform.workspace}"
   vpc_id                = module.network.vpc_id
   key_name              = "TedSearch-${terraform.workspace}_Key"
-  create_before_destroy = var.create_before_destroy
   tags                  = local.common_tags
 
 }
