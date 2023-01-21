@@ -1,4 +1,5 @@
 
+report_active
 docker-compose.yml
 !app/docker-compose.yml
 Ted_Search.png
